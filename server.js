@@ -3,6 +3,7 @@ var app = express();
 var path = require("path");
 var fs = require("fs");
 var dotenv = require('dotenv');
+const port = process.env.PORT || 3000;
 dotenv.config();
  
 app.use(express.static(path.join(__dirname)));
@@ -95,6 +96,6 @@ app.delete('/collection/:collectionName/:id', (req, res, next) => {
         });
 });
  
-app.listen(3000, function(){
+app.listen(port, function(){
     console.log("App started on port 3000");
 });
