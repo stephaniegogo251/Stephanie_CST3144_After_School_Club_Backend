@@ -23,8 +23,6 @@ app.use(function(req, res, next){
  
 app.use(express.json());
 
-app.use(express.static(path.join(__dirname, "static")));
-
 app.use(function(req, res, next){
     var filePath = path.join(__dirname, "static", req.url);
     fs.stat(filePath, function(err, fileInfo){
