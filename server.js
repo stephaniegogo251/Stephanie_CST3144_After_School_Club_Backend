@@ -17,7 +17,7 @@ app.use ((req,res,next) => {
 });
 
 app.use(function(req, res, next){
-    console.log(`Request method: ${req.method}, path: ${req.path}, time: ${new Date()}`);
+    console.log(`${req.method} ${req.path} time: ${new Date()}`);
     next();
 });
  
