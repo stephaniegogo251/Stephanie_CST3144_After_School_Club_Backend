@@ -5,8 +5,6 @@ var fs = require("fs");
 var dotenv = require('dotenv');
 const port = process.env.PORT || 3000;
 dotenv.config();
- 
-app.use(express.static(path.join(__dirname)));
 
 app.use(function(req, res, next){
     console.log("Request date " + new Date());
