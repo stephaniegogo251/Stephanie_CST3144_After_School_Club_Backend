@@ -5,14 +5,26 @@ var fs = require("fs");
 var dotenv = require('dotenv');
 const port = process.env.PORT || 3000;
 dotenv.config();
+
+//config express.js
+app.use ((req,res,next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader("Access-Control-Allow-Credentials", "true");
+    res.setHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
+    res.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
  
-app.use(express.static(path.join(__dirname)));
+    next();
+});
 
 app.use(function(req, res, next){
     console.log("Request date " + new Date());
     next();
 });
  
+app.use(express.json());
+
+app.use(express.static(path.join(__dirname, "static")));
+
 app.use(function(req, res, next){
     var filePath = path.join(__dirname, "static", req.url);
     fs.stat(filePath, function(err, fileInfo){
@@ -25,17 +37,6 @@ app.use(function(req, res, next){
         else
             next();
     });
-});
-
-//config express.js
-app.use(express.json());
-app.use ((req,res,next) => {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader("Access-Control-Allow-Credentials", "true");
-    res.setHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
-    res.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
- 
-    next();
 });
 
 const MongoClient = require('mongodb').MongoClient;
