@@ -41,7 +41,7 @@ const MongoClient = require('mongodb').MongoClient;
 const uri = process.env.MONGODB_URI;
 
 let db;
-MongoClient.connect(uri, (err, client) => {
+MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
     db = client.db('webstore');
 });
 
