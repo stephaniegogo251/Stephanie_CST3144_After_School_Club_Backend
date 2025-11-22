@@ -42,7 +42,7 @@ const uri = process.env.MONGODB_URI;
 
 let db;
 MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
-    db = client.db('webstore');
+    db = client.db('lessonsDB');
 });
 
 app.get('/', (req, res, next) => {
