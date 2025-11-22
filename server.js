@@ -26,8 +26,6 @@ app.use(function(req, res, next){
     });
 });
 
-const MongoClient = require('mongodb').MongoClient;
-
 //config express.js
 app.use(express.json());
 app.use ((req,res,next) => {
@@ -39,6 +37,7 @@ app.use ((req,res,next) => {
     next();
 });
 
+const MongoClient = require('mongodb').MongoClient;
 const uri = process.env.MONGODB_URI;
 
 let db;
