@@ -42,9 +42,9 @@ const MongoClient = require('mongodb').MongoClient;
 const uri = process.env.MONGODB_URI;
 
 let db;
-MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
-    db = client.db('lessonsDB');
-});
+MongoClient.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(client => {
+    db = client.db('lessonsDB')});
 
 app.get('/', (req, res, next) => {
     res.send('Select a collection, e.g., /collection/messages');
