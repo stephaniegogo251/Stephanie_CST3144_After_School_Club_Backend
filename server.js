@@ -25,11 +25,6 @@ app.use(function(req, res, next){
             next();
     });
 });
- 
-app.use(function(req, res){
-    res.status(404);
-    res.send("File not Found!");
-});
 
 const MongoClient = require('mongodb').MongoClient;
 
