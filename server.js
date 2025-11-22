@@ -42,7 +42,7 @@ const MongoClient = require('mongodb').MongoClient;
 const uri = process.env.MONGODB_URI;
 
 let db;
-MongoClient.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(client => {
     db = client.db('lessonsDB')});
 
