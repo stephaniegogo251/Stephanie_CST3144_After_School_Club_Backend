@@ -28,7 +28,7 @@ app.use(function(req, res, next){
     var filePath = path.join(__dirname, "static", req.url);
     fs.stat(filePath, function(err, fileInfo){
         if (err){
-            next();
+            next(); //if not, add req.fileError and send it in a later middleware
             return;
         }
         if(fileInfo.isFile())
@@ -36,11 +36,6 @@ app.use(function(req, res, next){
         else
             next();
     });
-});
-
-app.use(function(req, res){
-    res.status(404);
-    res.send("File not Found!");
 });
 
 const MongoClient = require('mongodb').MongoClient;
