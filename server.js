@@ -29,6 +29,7 @@ app.use(function(req, res, next){
     fs.stat(filePath, function(err, fileInfo){
         if (err){
             res.send("File not found!");
+            next();
             return;
         }
         if(fileInfo.isFile())
