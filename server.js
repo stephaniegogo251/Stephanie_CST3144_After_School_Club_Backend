@@ -28,7 +28,7 @@ app.use(function(req, res, next){
     var filePath = path.join(__dirname, "static", req.url);
     fs.stat(filePath, function(err, fileInfo){
         if (err){
-            next();
+            next(err);
             return;
         }
         if(fileInfo.isFile())
