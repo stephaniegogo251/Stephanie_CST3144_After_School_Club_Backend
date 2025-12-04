@@ -76,6 +76,7 @@ app.get('/collection/:collectionName/search', (req, res, next) => {
     const numQuery = 0;
     if (Number(query)) {
         query = Number(query);
+        console.log(typeof query);
     }
 
     const searchPattern = new RegExp(query, 'i');
