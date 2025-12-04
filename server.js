@@ -78,6 +78,8 @@ app.get('/collection/:collectionName/search', (req, res, next) => {
         $or: [
             {name: {$regex: searchPattern}},
             {location: {$regex: searchPattern}},
+            {price: {$regex: searchPattern}},
+            {availableSeats: {$regex: searchPattern}}
         ]
     };
 
