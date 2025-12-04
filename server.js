@@ -17,9 +17,6 @@ app.use ((req,res,next) => {
 });
 
 app.use(function(req, res, next){
-    if (req.query) {
-        console.log(`${req.method} ${req.path} ${req.query} time: ${new Date()}`);
-    }
     console.log(`${req.method} ${req.path} time: ${new Date()}`);
     next();
 });
