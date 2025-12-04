@@ -84,7 +84,7 @@ app.get('/collection/:collectionName/search', (req, res, next) => {
         ]
     };
 
-    req.collection.find({searchQuery}).toArray((e, results) => {
+    req.collection.find(searchQuery).toArray((e, results) => {
         if (e) return next(e);
         res.send(results);
     }); 
