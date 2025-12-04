@@ -71,6 +71,26 @@ app.post('/collection/:collectionName', (req, res, next) => {
 
 const ObjectID = require('mongodb').ObjectID;
 
+app.get('/collection/:collectionName/search', (req, res, next) => {
+    const query = req.query.q;
+    const searchPattern = new RegExp(query, 'i');
+
+    const searchQuery = {
+        $or: [
+            {name: {$regex: searchPattern}},
+            {location: {$regex: searchPattern}},
+            {price: {$regex: searchPattern}},
+            {availableSeats: {$regex: searchPattern}}
+        ]
+    };
+
+    req.collection.find({searchQuery}).toArray((e, results) => {
+        if (e) return next(e);
+        res.send(results);
+    }); 
+
+});
+
 app.put('/collection/:collectionName/:id', (req, res, next) => {
     req.collection.updateOne(
         {_id: new ObjectID(req.params.id)},
