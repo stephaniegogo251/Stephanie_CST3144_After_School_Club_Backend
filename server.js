@@ -73,15 +73,8 @@ const ObjectID = require('mongodb').ObjectID;
 
 app.get('/collection/:collectionName/search', (req, res, next) => {
     const query = req.query.q;
-    const numQuery = 0;
-    if (Number(query)) {
-        query = Number(query);
-        console.log(typeof query);
-    }
-
     const searchPattern = new RegExp(query, 'i');
-
-    const searchQuery = {
+    let searchQuery = {
         $or: [
             {name: {$regex: searchPattern}},
             {location: {$regex: searchPattern}},
@@ -89,6 +82,19 @@ app.get('/collection/:collectionName/search', (req, res, next) => {
             {availableSeats: {$regex: searchPattern}}
         ]
     };
+
+    let numQuery = 0;
+    if (!isNaN(parseInt(query))) {
+        numQuery = parseInt(query);
+        searchQuery = {
+        $or: [
+            {name: {$regex: searchPattern}},
+            {location: {$regex: searchPattern}},
+            {price: numQuery},
+            {availableSeats:numQuery}
+        ]
+    };
+    }
 
     req.collection.find(searchQuery).toArray((e, results) => {
         if (e) return next(e);
