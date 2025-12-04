@@ -73,6 +73,11 @@ const ObjectID = require('mongodb').ObjectID;
 
 app.get('/collection/:collectionName/search', (req, res, next) => {
     const query = req.query.q;
+    const numQuery = 0;
+    if (Number(query)) {
+        query = Number(query);
+    }
+
     const searchPattern = new RegExp(query, 'i');
 
     const searchQuery = {
