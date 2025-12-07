@@ -1,5 +1,5 @@
 var express = require("express");
-var app = express();
+var app = express(); //create instance of express.js
 var path = require("path");
 var fs = require("fs");
 var dotenv = require('dotenv');
@@ -7,6 +7,7 @@ const port = process.env.PORT || 3000;
 dotenv.config();
 
 //config express.js
+//cors middleware - applied to all requests to allow resources to be shared across diff domains
 app.use ((req,res,next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader("Access-Control-Allow-Credentials", "true");
@@ -16,19 +17,25 @@ app.use ((req,res,next) => {
     next();
 });
 
+//logging middleware
 app.use(function(req, res, next){
+    //logs request method, path, query and timestamp
     console.log(`${req.method} ${req.path} ${JSON.stringify(req.query)} time: ${new Date()}`);
     next();
 });
  
+//built-in express middleware to parse incoming json requests
 app.use(express.json());
+
+//middleware to serve static files (image files in lessons)
 app.use('/static', express.static(path.join(__dirname, 'static')));
 
+//middleware to handle and send static files
 app.use(function(req, res, next){
     var filePath = path.join(__dirname, "static", req.url);
     fs.stat(filePath, function(err, fileInfo){
         if (err){
-            next(); //if not, add req.fileError and send it in a later middleware
+            next();
             return;
         }
         if(fileInfo.isFile())
@@ -38,23 +45,27 @@ app.use(function(req, res, next){
     });
 });
 
-const MongoClient = require('mongodb').MongoClient;
-const uri = process.env.MONGODB_URI;
+const MongoClient = require('mongodb').MongoClient; //import mongoclient(object part of mongodb driver) to talk to mongo server
+const uri = process.env.MONGODB_URI; //mongodb connection uri
 
 let db;
+//connect to mongodb
 MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(client => {
-    db = client.db('lessonsDB')});
+    db = client.db('lessonsDB')}); //connect to specific database
 
+//default route for root path
 app.get('/', (req, res, next) => {
     res.send('Select a collection, e.g., /collection/messages');
 });
 
+//route paramter middleware to attach collection to the request object for all other request handlers
 app.param('collectionName', (req, res, next, collectionName) => {
     req.collection = db.collection(collectionName);
     return next();
 });
 
+//get route to return lessons collection as an array
 app.get('/collection/:collectionName', (req, res, next) => {
     req.collection.find({}).toArray((e, results) => {
         if (e) return next(e);
@@ -62,6 +73,7 @@ app.get('/collection/:collectionName', (req, res, next) => {
     }); 
 });
 
+//post route to add order to orders collection
 app.post('/collection/:collectionName', (req, res, next) => {
     req.collection.insert(req.body, (e, results) => {
         if (e) return next(e);
@@ -69,11 +81,10 @@ app.post('/collection/:collectionName', (req, res, next) => {
     });
 });
 
-const ObjectID = require('mongodb').ObjectID;
-
+//get route to search for specific lessons from collection
 app.get('/collection/:collectionName/search', (req, res, next) => {
     const query = req.query.q;
-    const searchPattern = new RegExp(query, 'i');
+    const searchPattern = new RegExp(query, 'i'); //case-insensitive regex pattern
     let searchQuery = {
         $or: [
             {name: {$regex: searchPattern}},
@@ -101,6 +112,9 @@ app.get('/collection/:collectionName/search', (req, res, next) => {
 
 });
 
+const ObjectID = require('mongodb').ObjectID;
+
+//put route to update available spaces of a lesson
 app.put('/collection/:collectionName/:id', (req, res, next) => {
     req.collection.updateOne(
         {_id: new ObjectID(req.params.id)},
@@ -111,7 +125,8 @@ app.put('/collection/:collectionName/:id', (req, res, next) => {
             res.send((result.result.n === 1) ? {msg: 'success'} : {msg: 'error'});
         });
 });
- 
+
+//server starts and listens on port 3000
 app.listen(port, function(){
     console.log("App started on port 3000");
 });
